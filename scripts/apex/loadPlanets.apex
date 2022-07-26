@@ -1,5 +1,5 @@
 // script for inserting a number of planets into the DB using the python script
-// parsePlanetsIntoMultiline.py to convert a csv into a multiline string
+// parseCSVIntoMultiline.py to convert a csv into a multiline string
 
 // the first line of this script must be a string named planets, copied from the
 // file generated with the python script mentioned before and renamed to planets
@@ -73,6 +73,8 @@ String[] planetsArray = planets.split('\n');
 String[] fieldsArray = planetsArray[0].split(';');
 Integer numberOfFields = fieldsArray.size();
 List<String> errors = new List<String>();
+SObjectType planetSObjectType = Schema.getGlobalDescribe().get('Planet__c');
+Map<String, Schema.SObjectField> planetFieldsMap = planetSObjectType.getDescribe().fields.getMap();
 // the planetsToUpsert list will be filled with the planets records to upsert
 List<Planet__c> planetsToUpsert = new List<Planet__c>();
 for (Integer i = 1; i < planetsArray.size(); i++) {
@@ -86,8 +88,6 @@ for (Integer i = 1; i < planetsArray.size(); i++) {
   }
   // a new planet is created and the value for each field is added dynamically
   Planet__c newPlanet = new Planet__c();
-  SObjectType planetSObjectType = Schema.getGlobalDescribe().get('Planet__c');
-  Map<String, Schema.SObjectField> planetFieldsMap = planetSObjectType.getDescribe().fields.getMap();
   for (Integer j = 0; j < numberOfFields; j++) {
     // the external id field is being mapped with the Code__c field
     String fieldToGet = (fieldsArray[j].toLowerCase() == 'external_id__c') ? 'Code__c' : fieldsArray[j];
@@ -115,6 +115,7 @@ if (planetsToUpsert.size() > 0) {
       break;
     }
   }
+  Integer planetsUpserted = 0;
   if (field != null) {
     // upserting the records
     System.debug('> upserting planets');
@@ -126,8 +127,11 @@ if (planetsToUpsert.size() > 0) {
           System.debug(err.getStatusCode() + ': ' + err.getMessage());
           System.debug('> fields that affected this error: ' + err.getFields());
         }
+      } else {
+        planetsUpserted++;
       }
     }
+    System.debug('> ' + planetsUpserted + ' planets were upserted');
   } else {
     // inserting the records
     System.debug('> inserting planets');
@@ -139,8 +143,11 @@ if (planetsToUpsert.size() > 0) {
           System.debug(err.getStatusCode() + ': ' + err.getMessage());
           System.debug('> fields that affected this error: ' + err.getFields());
         }
+      } else {
+        planetsUpserted++;
       }
     }
+    System.debug('> ' + planetsUpserted + ' planets were inserted');
   }
 }
 if (errors.size() > 0) {
