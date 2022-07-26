@@ -1,30 +1,30 @@
-# script for parsing the planets csv into a multiline string ready to be
-# run in an apex anonymous call to insert said planets into the DB
+# script for parsing the csvs into a multiline string ready to be
+# run in an apex anonymous call to insert said records into the DB
 # the output string must resemble the next one:
 
-# String planets = 'Name;External_id__c' +
-# 'Alderaan;A-00001' +
-# 'Aleen Minor;AM-00002' +
+# String data = 'Name;External_id__c\n' +
+# 'Alderaan;A-00001\n' +
+# 'Aleen Minor;AM-00002\n' +
 # 'Zolan;Z-00060';
 
 from datetime import datetime
 
 
-def parsePlanets():
+def parseCSV():
     try:
         # open the file in read mode from the same directory as the script
-        planetsFile = open("Planet__c.csv", "r")
+        csvFile = open("CustomMetadata.csv", "r")
     except OSError as ex:
         print("> could not open/read files " + str(ex))
         exit()
-    with planetsFile:
+    with csvFile:
         # with the file opened, prepare the required variables to iterate over the file
         print("> files opened successfully")
-        lines = planetsFile.readlines()
+        lines = csvFile.readlines()
         numberOfLines = len(lines)
         print("> numberOfLines = " + str(numberOfLines))
         lineNumber = 0
-        planetsConcatenated = 'String planets = \''
+        stringConcatenated = 'String data = \''
 
         # iterate over the lines in the file to build the output string
         for line in lines:
@@ -32,13 +32,13 @@ def parsePlanets():
             line = line.strip()
             print("> " + str(lineNumber) + " line = " + line)
             # append the processed line with simple quote (\')
-            planetsConcatenated += line
+            stringConcatenated += line
             # if the processed line is the last one, just append the semicolon (;)
             # if not append a linebreak and a semicolon for the next line
             if lineNumber == numberOfLines - 1:
-                planetsConcatenated += '\';'
+                stringConcatenated += '\';'
             else:
-                planetsConcatenated += '\\n\' +\n\''
+                stringConcatenated += '\\n\' +\n\''
             lineNumber += 1
 
         # create a new file to save the output in case we need it later
@@ -49,10 +49,10 @@ def parsePlanets():
         nowStr = nowStr.replace("-", "")
         nowStr = nowStr.replace(" ", "")
         newFile = open(nowStr + ".txt", "x")
-        newFile.write(planetsConcatenated)
-        print(planetsConcatenated)
+        newFile.write(stringConcatenated)
+        print(stringConcatenated)
 
 
 if __name__ == "__main__":
-    print('\n> parsePlanetsIntoMultiline.py script running...')
-    parsePlanets()
+    print('\n> parseCSVIntoMultiline.py script running...')
+    parseCSV()

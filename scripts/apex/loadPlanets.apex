@@ -2,7 +2,7 @@
 // parsePlanetsIntoMultiline.py to convert a csv into a multiline string
 
 // the first line of this script must be a string named planets, copied from the
-// file generated with the python script mentioned before
+// file generated with the python script mentioned before and renamed to planets
 String planets =
   'Name;External_id__c\n' +
   'Alderaan;A-00001\n' +
