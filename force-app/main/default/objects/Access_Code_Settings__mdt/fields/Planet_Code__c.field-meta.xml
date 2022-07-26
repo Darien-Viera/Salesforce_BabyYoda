@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <caseSensitive>false</caseSensitive>
+  <description>Stores a Planet Code equivalent to the External Id field used in the Planet custom object.</description>
+  <externalId>false</externalId>
+  <fieldManageability>DeveloperControlled</fieldManageability>
+  <fullName>Planet_Code__c</fullName>
+  <inlineHelpText>Stores a Planet Code equivalent to the External Id field used in the Planet custom object.</inlineHelpText>
+  <label>Planet Code</label>
+  <length>10</length>
+  <required>true</required>
+  <type>Text</type>
+  <unique>true</unique>
+</CustomField>
