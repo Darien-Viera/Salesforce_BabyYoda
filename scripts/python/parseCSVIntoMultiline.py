@@ -13,6 +13,7 @@ from datetime import datetime
 def parseCSV():
     try:
         # open the file in read mode from the same directory as the script
+        # the name of the file should be updated to CustomMetadata.csv or Planet__c.csv
         csvFile = open("CustomMetadata.csv", "r")
     except OSError as ex:
         print("> could not open/read files " + str(ex))
@@ -30,6 +31,8 @@ def parseCSV():
         for line in lines:
             # remove blank spaces at both ends of the line
             line = line.strip()
+            if (line.__contains__('\\')):
+                line = line.replace('\\', '\\\\')
             print("> " + str(lineNumber) + " line = " + line)
             # append the processed line with simple quote (\')
             stringConcatenated += line
