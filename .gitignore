@@ -39,5 +39,7 @@ $RECYCLE.BIN/
 # Local environment variables
 .env
 
-# csv files
-*.csv
+# scripts folder
+scripts/apex/*.csv
+scripts/python/*.csv
+scripts/python/*.txt
