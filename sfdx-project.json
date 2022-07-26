@@ -1,0 +1,12 @@
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "name": "Salesforce_BabyYoda",
+  "namespace": "",
+  "sfdcLoginUrl": "https://homebrew2-dev-ed.my.salesforce.com",
+  "sourceApiVersion": "55.0"
+}
