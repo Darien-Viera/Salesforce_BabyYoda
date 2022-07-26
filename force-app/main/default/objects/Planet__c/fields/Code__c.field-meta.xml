@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-  <description>Field for storing the code belonging to a planet.</description>
+  <description>Field for storing the code belonging to a planet. E.g. A-00001, AM-00002, etc.</description>
   <externalId>true</externalId>
   <fullName>Code__c</fullName>
   <inlineHelpText>Field for storing the code belonging to a planet. E.g. A-00001, AM-00002, etc.</inlineHelpText>

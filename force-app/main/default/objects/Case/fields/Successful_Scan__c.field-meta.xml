@@ -4,6 +4,7 @@
   <description>Stores if Baby Yoda was found in the related Planet.</description>
   <externalId>false</externalId>
   <fullName>Successful_Scan__c</fullName>
+  <inlineHelpText>Stores if Baby Yoda was found in the related Planet.</inlineHelpText>
   <label>Successful Scan</label>
   <trackFeedHistory>false</trackFeedHistory>
   <trackHistory>false</trackHistory>
