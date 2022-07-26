@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <deleteConstraint>SetNull</deleteConstraint>
+  <description>A lookup relationship to the Planet custom object.</description>
+  <externalId>false</externalId>
+  <fullName>Planet__c</fullName>
+  <inlineHelpText>A lookup relationship to the Planet custom object.</inlineHelpText>
+  <label>Planet</label>
+  <referenceTo>Planet__c</referenceTo>
+  <relationshipLabel>Cases</relationshipLabel>
+  <relationshipName>Cases</relationshipName>
+  <required>false</required>
+  <trackFeedHistory>false</trackFeedHistory>
+  <trackHistory>false</trackHistory>
+  <trackTrending>false</trackTrending>
+  <type>Lookup</type>
+</CustomField>
