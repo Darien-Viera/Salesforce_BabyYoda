@@ -30,7 +30,6 @@ public class MandalorianServerAPIHandler {
     return sendCallout(planetCode, planetAccessCode, mandoServerMeta);
   }
 
-  @testVisible
   private static ResponseWrapper sendCallout(
     String planetCode,
     String planetAccessCode,
@@ -62,7 +61,6 @@ public class MandalorianServerAPIHandler {
     mandoServerMeta.User == null);
   }
 
-  @testVisible
   private static ResponseWrapper switchOnHTTPResponseStatusCode(String planetCode, Integer statusCode, String body) {
     // this function switchs on each possible status code returned by the callout and handles their respective
     // actions in separate functions, also returns a generic error if the status code is not a predefined one
@@ -71,7 +69,7 @@ public class MandalorianServerAPIHandler {
         return handleStatusCode200(planetCode, body);
       }
       when 400, 401, 500 {
-        return handleStatusCode400_401_500(planetCode, body);
+        return handleStatusCode400_401_500(statusCode, body);
       }
       when else {
         return new ResponseWrapper('ERROR', 'Unexpected status code returned \nPayload returned: ' + body);
@@ -79,7 +77,6 @@ public class MandalorianServerAPIHandler {
     }
   }
 
-  @testVisible
   private static ResponseWrapper handleStatusCode200(String planetCode, String body) {
     // if the status code is 200 then we proceed to deserialize the body, cast the object value to
     // boolean, close the case and return a success message toast
@@ -106,18 +103,29 @@ public class MandalorianServerAPIHandler {
     return new ResponseWrapper('SUCCESS', 'Scan successful! Was Baby Yoda found? -> ' + value);
   }
 
-  @testVisible
-  private static ResponseWrapper handleStatusCode400_401_500(String planetCode, String body) {
+  private static ResponseWrapper handleStatusCode400_401_500(Integer statusCode, String body) {
     // same as above, deserialize the body, cast the object value to string and return a
     // warning message toast
     Map<String, Object> deserializedJSON = (Map<String, Object>) JSON.deserializeUntyped(body);
     Object errorMsg = deserializedJSON.get('error');
-    // if the value was not found or cannot be casted to string, return an error toast stating that
-    // there are issues in the returned body
+    // the toast message is obtained from the body returned by the callout, but since the status code
+    // returned is enough to determine the message, if we fail to obtain the message from the body, a
+    // standard error message is sent
+    String errorMsgString = null;
     if (errorMsg == null || !(errorMsg instanceof String)) {
-      return new ResponseWrapper('ERROR', 'Unexpected body returned \nPayload returned: ' + body);
+      switch on statusCode {
+        when 400 {
+          errorMsgString = 'Bad planet access code';
+        }
+        when 401 {
+          errorMsgString = 'Bad or missing authentication';
+        }
+        when 500 {
+          errorMsgString = 'Internal server error';
+        }
+      }
     }
-    String errorMsgString = (String) errorMsg;
+    errorMsgString = (errorMsgString == null) ? (String) errorMsg : errorMsgString;
     return new ResponseWrapper('WARNING', errorMsgString);
   }
 }

@@ -2,15 +2,25 @@
 public class MandalorianServerAPIHandlerTest {
   @TestSetup
   public static void makeData() {
-    List<Access_Code_Settings__mdt> data = [SELECT Id, Planet_Code__c, Access_Code__c FROM Access_Code_Settings__mdt];
-    System.assertNotEquals(0, data.size(), '> AccessCodeSettings mdt must contain at least one record');
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    System.assertEquals(1, data.size(), '> AccessCodeSettings mdt must contain the Entry1 record');
     List<Integration_Credential__mdt> data2 = [
       SELECT Id
       FROM Integration_Credential__mdt
       WHERE Label = 'Mandalorian-Server'
       LIMIT 1
     ];
-    System.assertNotEquals(0, data2.size(), '> IntegrationCredential mdt must contain the Mandalorian Server record');
+    System.assertEquals(1, data2.size(), '> IntegrationCredential mdt must contain the Mandalorian Server record');
+
+    Case newCase = new Case();
+    newCase.Subject = 'Solicitud de escaneo - TESTPLANET';
+    newCase.Description = 'Codigo de acceso al sistema de escaneo interplanetario: ' + data[0].Planet_Code__c;
+    insert newCase;
   }
 
   @isTest
@@ -52,5 +62,193 @@ public class MandalorianServerAPIHandlerTest {
     System.assertEquals('INFO', resp4.ToastType, '> ResponseWrapper should be of Toast Type INFO');
     System.assertEquals('ERROR', respNeg.ToastType, '> ResponseWrapper negative should be of Toast Type ERROR');
     System.assertEquals('Invalid toast type passed as argument to the Response Wrapper', respNeg.Payload);
+  }
+
+  @isTest
+  public static void testHandleCallout200() {
+    Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock200());
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    String planetCode = data[0].Planet_Code__c;
+    test.startTest();
+    MandalorianServerAPIHandler.ResponseWrapper res = MandalorianServerAPIHandler.handleCallout(data[0].Planet_Code__c);
+    test.stopTest();
+    System.assertEquals('SUCCESS', res.ToastType, '> ResponseWrapper should be of Toast Type SUCCESS');
+    System.assertEquals('Scan successful! Was Baby Yoda found? -> true', res.Payload);
+    List<Case> caseList = [
+      SELECT Id, IsClosed, Successful_Scan__c, Planet__r.Code__c
+      FROM Case
+      WHERE Planet__r.Code__c = :planetCode
+      LIMIT 1
+    ];
+    System.assertEquals(
+      true,
+      caseList[0].Successful_Scan__c,
+      '> handleCallout should have marked the case as true in the Successful Scan field'
+    );
+    System.assertEquals(
+      true,
+      caseList[0].IsClosed,
+      '> handleCallout should have marked the case as true in the IsClosed field'
+    );
+  }
+
+  @isTest
+  public static void testHandleCallout200Negative() {
+    Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock200Negative());
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    String planetCode = data[0].Planet_Code__c;
+    test.startTest();
+    MandalorianServerAPIHandler.ResponseWrapper res = MandalorianServerAPIHandler.handleCallout(planetCode);
+    test.stopTest();
+    System.assertEquals('ERROR', res.ToastType, '> handleCallout should be of Toast Type ERROR');
+    System.assertEquals('Unexpected body returned \nPayload returned: {"negative" : true}', res.Payload);
+    List<Case> caseList = [
+      SELECT Id, IsClosed, Successful_Scan__c, Planet__r.Code__c
+      FROM Case
+      WHERE Planet__r.Code__c = :planetCode
+      LIMIT 1
+    ];
+    System.assertEquals(
+      false,
+      caseList[0].Successful_Scan__c,
+      '> handleCallout should have left the case marked as false in the Successful Scan field'
+    );
+    System.assertEquals(
+      false,
+      caseList[0].IsClosed,
+      '> handleCallout should have left the case marked as false in the IsClosed field'
+    );
+  }
+
+  @isTest
+  public static void testHandleCallout400() {
+    Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock400());
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    String planetCode = data[0].Planet_Code__c;
+    test.startTest();
+    MandalorianServerAPIHandler.ResponseWrapper res = MandalorianServerAPIHandler.handleCallout(planetCode);
+    test.stopTest();
+    System.assertEquals('WARNING', res.ToastType, '> handleCallout should be of Toast Type WARNING');
+    System.assertEquals('Bad planet access code positive testing', res.Payload);
+  }
+
+  @isTest
+  public static void testHandleCallout400Negative() {
+    Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock400Negative());
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    String planetCode = data[0].Planet_Code__c;
+    test.startTest();
+    MandalorianServerAPIHandler.ResponseWrapper res = MandalorianServerAPIHandler.handleCallout(planetCode);
+    test.stopTest();
+    System.assertEquals('WARNING', res.ToastType, '> handleCallout should be of Toast Type WARNING');
+    System.assertEquals('Bad planet access code', res.Payload);
+  }
+
+  @isTest
+  public static void testHandleCallout401() {
+    Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock401());
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    String planetCode = data[0].Planet_Code__c;
+    test.startTest();
+    MandalorianServerAPIHandler.ResponseWrapper res = MandalorianServerAPIHandler.handleCallout(planetCode);
+    test.stopTest();
+    System.assertEquals('WARNING', res.ToastType, '> handleCallout should be of Toast Type WARNING');
+    System.assertEquals('Bad or missing authentication positive testing', res.Payload);
+  }
+
+  @isTest
+  public static void testHandleCallout401Negative() {
+    Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock401Negative());
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    String planetCode = data[0].Planet_Code__c;
+    test.startTest();
+    MandalorianServerAPIHandler.ResponseWrapper res = MandalorianServerAPIHandler.handleCallout(planetCode);
+    test.stopTest();
+    System.assertEquals('WARNING', res.ToastType, '> handleCallout should be of Toast Type WARNING');
+    System.assertEquals('Bad or missing authentication', res.Payload);
+  }
+
+  @isTest
+  public static void testHandleCallout500() {
+    Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock500());
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    String planetCode = data[0].Planet_Code__c;
+    test.startTest();
+    MandalorianServerAPIHandler.ResponseWrapper res = MandalorianServerAPIHandler.handleCallout(planetCode);
+    test.stopTest();
+    System.assertEquals('WARNING', res.ToastType, '> handleCallout should be of Toast Type WARNING');
+    System.assertEquals('Internal server error positive testing', res.Payload);
+  }
+
+  @isTest
+  public static void testHandleCallout500Negative() {
+    Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock500Negative());
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    String planetCode = data[0].Planet_Code__c;
+    test.startTest();
+    MandalorianServerAPIHandler.ResponseWrapper res = MandalorianServerAPIHandler.handleCallout(planetCode);
+    test.stopTest();
+    System.assertEquals('WARNING', res.ToastType, '> handleCallout should be of Toast Type WARNING');
+    System.assertEquals('Internal server error', res.Payload);
+  }
+
+  @isTest
+  public static void testHandleCalloutWrongStatus() {
+    Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMockWrongStatus());
+    List<Access_Code_Settings__mdt> data = [
+      SELECT Id, Planet_Code__c
+      FROM Access_Code_Settings__mdt
+      WHERE Label = 'Entry1'
+      LIMIT 1
+    ];
+    String planetCode = data[0].Planet_Code__c;
+    test.startTest();
+    MandalorianServerAPIHandler.ResponseWrapper res = MandalorianServerAPIHandler.handleCallout(planetCode);
+    test.stopTest();
+    System.assertEquals('ERROR', res.ToastType, '> handleCallout should be of Toast Type ERROR');
+    System.assertEquals(
+      'Unexpected status code returned \nPayload returned: {"crazy" : "The server went crazy :P"}',
+      res.Payload
+    );
   }
 }
