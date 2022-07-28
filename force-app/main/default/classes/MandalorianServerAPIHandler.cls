@@ -7,6 +7,7 @@ public class MandalorianServerAPIHandler {
     public String Payload { get; private set; }
 
     public ResponseWrapper(String toast, String pay) {
+      // if the toast type passed is not a valid type, return an error toast
       if (!(new List<String>{ 'SUCCESS', 'ERROR', 'WARNING', 'INFO' }.contains(toast))) {
         ToastType = 'ERROR';
         Payload = 'Invalid toast type passed as argument to the Response Wrapper';

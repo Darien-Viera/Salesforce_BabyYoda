@@ -7,17 +7,22 @@ public class SingletonMandalorianServerAuth {
   public Map<String, Access_Code_Settings__mdt> AccessCodes { get; private set; }
   private static SingletonMandalorianServerAuth instance = null;
 
+  // singleton class that contains the authentication credentials for the Mandalorian Server
+  // and the metadata for the planet codes, the singleton pattern is used to avoid doing
+  // unnecessary queries over the metadata
   public SingletonMandalorianServerAuth() {
     initCredentials();
     initPlanetAccessCodes();
   }
 
+  // getInstance function for the singleton pattern
   public static SingletonMandalorianServerAuth getInstance() {
     if (instance == null)
       instance = new SingletonMandalorianServerAuth();
     return instance;
   }
 
+  // query and initialize the credentials from the metadata
   private void initCredentials() {
     List<Integration_Credential__mdt> data = [
       SELECT Id, EndPoint__c, Password__c, Type__c, User__c
@@ -33,6 +38,7 @@ public class SingletonMandalorianServerAuth {
     Password = data[0].Password__c;
   }
 
+  // query and initialize the planet access codes from the metadata
   private void initPlanetAccessCodes() {
     AccessCodes = new Map<String, Access_Code_Settings__mdt>();
     List<Access_Code_Settings__mdt> data = [SELECT Id, Planet_Code__c, Access_Code__c FROM Access_Code_Settings__mdt];
@@ -41,6 +47,7 @@ public class SingletonMandalorianServerAuth {
     }
   }
 
+  // auxiliar function used for testing
   @testVisible
   private void setAuthDataNull() {
     Endpoint = null;

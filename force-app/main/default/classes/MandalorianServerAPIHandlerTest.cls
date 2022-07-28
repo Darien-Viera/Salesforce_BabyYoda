@@ -2,6 +2,10 @@
 public class MandalorianServerAPIHandlerTest {
   @TestSetup
   public static void makeData() {
+    // it's required for the tests to work that the Mandalorian Server credentials and the Entry1 planet access
+    // code exist in metadata, so both metadatas are queried, asserted their values, and a case is inserted to test
+    // the server status code 200, the case trigger is required to run in order for the corresponding planet to be
+    // inserted along the case, so there's an assertion in the end to check if the planet was inserted successfully
     List<Access_Code_Settings__mdt> data = [
       SELECT Id, Planet_Code__c
       FROM Access_Code_Settings__mdt
@@ -16,15 +20,18 @@ public class MandalorianServerAPIHandlerTest {
       LIMIT 1
     ];
     System.assertEquals(1, data2.size(), '> IntegrationCredential mdt must contain the Mandalorian Server record');
-
+    String planetCode = data[0].Planet_Code__c;
     Case newCase = new Case();
     newCase.Subject = 'Solicitud de escaneo - TESTPLANET';
-    newCase.Description = 'Codigo de acceso al sistema de escaneo interplanetario: ' + data[0].Planet_Code__c;
+    newCase.Description = 'Codigo de acceso al sistema de escaneo interplanetario: ' + planetCode;
     insert newCase;
+    List<Planet__c> planetList = [SELECT Id, Code__c FROM Planet__c WHERE Code__c = :planetCode LIMIT 1];
+    System.assertEquals(1, planetList.size(), '> CaseTrigger must have inserted one corresponding planet');
   }
 
   @isTest
   public static void testSingletonMandalorianServerAuth() {
+    // positive test for the singleton class
     test.startTest();
     SingletonMandalorianServerAuth instance = SingletonMandalorianServerAuth.getInstance();
     test.stopTest();
@@ -37,6 +44,7 @@ public class MandalorianServerAPIHandlerTest {
 
   @isTest
   public static void testServerAuthIsMissingData() {
+    // negative test for the singleton class and for the serverAuthIsMissingData function in the MandalorianServerAPIHandler
     test.startTest();
     SingletonMandalorianServerAuth instance = SingletonMandalorianServerAuth.getInstance();
     Boolean result = MandalorianServerAPIHandler.serverAuthIsMissingData(instance);
@@ -49,6 +57,8 @@ public class MandalorianServerAPIHandlerTest {
 
   @isTest
   public static void testResponseWrapper() {
+    // positive and negative tests for the auxiliar wrapper object used to return the information related with the callout
+    // to the visual component
     test.startTest();
     MandalorianServerAPIHandler.ResponseWrapper resp = new MandalorianServerAPIHandler.ResponseWrapper('SUCCESS', 'a');
     MandalorianServerAPIHandler.ResponseWrapper resp2 = new MandalorianServerAPIHandler.ResponseWrapper('ERROR', 'a');
@@ -66,6 +76,8 @@ public class MandalorianServerAPIHandlerTest {
 
   @isTest
   public static void testHandleCallout200() {
+    // server status 200 callout positive testing, the case is queried at the end to check that the Successful Scan and
+    // Status fields were updated correctly
     Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock200());
     List<Access_Code_Settings__mdt> data = [
       SELECT Id, Planet_Code__c
@@ -99,6 +111,8 @@ public class MandalorianServerAPIHandlerTest {
 
   @isTest
   public static void testHandleCallout200Negative() {
+    // server status 200 callout negative testing, the case is queried at the end to check that the Successful Scan and
+    // Status fields were left untouched
     Test.setMock(HttpCalloutMock.class, new MandalorianServerMock.MandalorianServerMock200Negative());
     List<Access_Code_Settings__mdt> data = [
       SELECT Id, Planet_Code__c

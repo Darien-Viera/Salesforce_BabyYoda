@@ -1,5 +1,10 @@
 @isTest
 public class MandalorianServerMock {
+  // http mock classes for testing the different callout statuses that can be returned
+  // from the Mandalorian Server: 200, 400, 401, 500, in addition to positive and negative
+  // mocks for both types of testing and a mock for an unknown return status 9999,
+  // notice that the negative cases consist in the body for the response not having the
+  // expected key
   public class MandalorianServerMock200 implements HttpCalloutMock {
     public HTTPResponse respond(HTTPRequest req) {
       HttpResponse res = new HttpResponse();
