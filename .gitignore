@@ -43,4 +43,6 @@ $RECYCLE.BIN/
 scripts/apex/*.csv
 scripts/python/*.csv
 scripts/python/*.txt
-manifest/*
+manifest/*.xml
+package.xml
+manifest/package.xml
