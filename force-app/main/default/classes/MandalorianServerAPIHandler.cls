@@ -3,7 +3,9 @@ public class MandalorianServerAPIHandler {
   public class ResponseWrapper {
     // wrapper object for handling the response from the callout containing a toast type to be used in the LWC and
     // a payload for displaying information about the callout in said toast
+    @AuraEnabled
     public String ToastType { get; private set; }
+    @AuraEnabled
     public String Payload { get; private set; }
 
     public ResponseWrapper(String toast, String pay) {
