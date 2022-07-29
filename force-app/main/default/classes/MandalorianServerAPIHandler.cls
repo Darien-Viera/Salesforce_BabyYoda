@@ -18,6 +18,7 @@ public class MandalorianServerAPIHandler {
     }
   }
 
+  @AuraEnabled
   public static ResponseWrapper handleCallout(String planetCode) {
     SingletonMandalorianServerAuth mandoServerMeta = SingletonMandalorianServerAuth.getInstance();
     // if the metadata is not found in the DB during the singleton initialization, or if some
