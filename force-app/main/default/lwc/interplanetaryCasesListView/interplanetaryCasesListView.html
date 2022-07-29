@@ -20,11 +20,13 @@
       class="slds-var-m-horizontal_x-large slds-box"
       style="display: flex; align-items: center; justify-content: center"
     >
+      <!--If no cases were found, set the label to No Cases Found where the items should be-->
       <template if:false={casesLoaded}>
         <div>
           <h1><strong>-- No cases found --</strong></h1>
         </div>
       </template>
+      <!--If cases were found, set the normal visualization for the table-->
       <template if:true={casesLoaded}>
         <lightning-layout multiple-rows="true">
           <!--Spinner for the loading state of the page-->
@@ -45,73 +47,7 @@
                   value={caseElem.Planet__r.Code__c}
                   onclick={handleInterplanetaryScan}
                 ></lightning-button>
-                <div class="slds-var-m-horizontal_medium" style="border-top: 1px solid #b0adab">
-                  <dl class="slds-dl_horizontal">
-                    <!--Planet Code and URL to the Planet Record-->
-                    <dt class="slds-dl_horizontal__label">
-                      <p class="slds-truncate" title="Planet Code"><strong>Planet Code:</strong></p>
-                    </dt>
-                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                      <a class="slds-truncate" href={caseElem.PlanetHref}> {caseElem.Planet__r.Code__c} </a>
-                    </dd>
-
-                    <!--Case Number and URL to the Case Record-->
-                    <dt class="slds-dl_horizontal__label">
-                      <p class="slds-truncate" title="Case Number"><strong>Case Number:</strong></p>
-                    </dt>
-                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                      <a class="slds-truncate" href={caseElem.CaseHref}> {caseElem.CaseNumber} </a>
-                    </dd>
-
-                    <!--Case Status-->
-                    <dt class="slds-dl_horizontal__label">
-                      <p class="slds-truncate" title="Status"><strong>Status:</strong></p>
-                    </dt>
-                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                      <p class="slds-truncate" title={caseElem.Status}>{caseElem.Status}</p>
-                    </dd>
-
-                    <!--Subject-->
-                    <dt class="slds-dl_horizontal__label">
-                      <p class="slds-truncate" title="Subject"><strong>Subject:</strong></p>
-                    </dt>
-                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                      <p title={caseElem.Subject}>{caseElem.Subject}</p>
-                    </dd>
-
-                    <!--Description-->
-                    <dt class="slds-dl_horizontal__label">
-                      <p class="slds-truncate" title="Description"><strong>Description:</strong></p>
-                    </dt>
-                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                      <p title={caseElem.Description}>{caseElem.Description}</p>
-                    </dd>
-
-                    <!--Contact Name and URL to the Contact Record-->
-                    <dt class="slds-dl_horizontal__label">
-                      <p class="slds-truncate" title="Contact"><strong>Contact:</strong></p>
-                    </dt>
-                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                      <a class="slds-truncate" href={caseElem.ContactHref}> {caseElem.Contact.Name} </a>
-                    </dd>
-
-                    <!--Contact Email-->
-                    <dt class="slds-dl_horizontal__label">
-                      <p class="slds-truncate" title="Contact Email"><strong>Contact Email:</strong></p>
-                    </dt>
-                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                      <p class="slds-truncate" title={caseElem.SuppliedEmail}>{caseElem.SuppliedEmail}</p>
-                    </dd>
-
-                    <!--Created Date-->
-                    <dt class="slds-dl_horizontal__label">
-                      <p class="slds-truncate" title="Create Date"><strong>Create Date:</strong></p>
-                    </dt>
-                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                      <p class="slds-truncate" title={caseElem.CreatedDate}>{caseElem.CreatedDate}</p>
-                    </dd>
-                  </dl>
-                </div>
+                <c-interplanetary-cases-card case-elem={caseElem}></c-interplanetary-cases-card>
               </lightning-card>
             </lightning-layout-item>
           </template>
