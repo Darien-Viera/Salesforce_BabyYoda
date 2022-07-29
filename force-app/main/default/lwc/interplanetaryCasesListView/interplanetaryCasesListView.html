@@ -1,0 +1,122 @@
+<template>
+  <lightning-card title="Interplanetary Cases" icon-name="utility:cases" class="slds-var-m-horizontal_xx-large">
+    <!--Button for testing purposes, it restores the interplanetary cases to New status and sets the Scan to false-->
+    <lightning-button
+      label="Restore Interplanetary Cases"
+      title="Restore Interplanetary Cases"
+      slot="actions"
+      icon-name="utility:recycle_bin_full"
+      onclick={handleRestoreInterplanetaryCases}
+    ></lightning-button>
+    <!--Button for refreshing the list-->
+    <lightning-button
+      label="Refresh"
+      title="Refresh"
+      slot="actions"
+      icon-name="utility:refresh"
+      onclick={handleRefreshRecords}
+    ></lightning-button>
+    <div
+      class="slds-var-m-horizontal_x-large slds-box"
+      style="display: flex; align-items: center; justify-content: center"
+    >
+      <template if:false={casesLoaded}>
+        <div>
+          <h1><strong>-- No cases found --</strong></h1>
+        </div>
+      </template>
+      <template if:true={casesLoaded}>
+        <lightning-layout multiple-rows="true">
+          <!--Spinner for the loading state of the page-->
+          <template if:true={loading}>
+            <lightning-spinner alternative-text="Loading..." size="large" variant="brand"></lightning-spinner>
+          </template>
+
+          <!--Iterate over the Case List returned from the Server Controller-->
+          <template for:each={casesList} for:item="caseElem">
+            <lightning-layout-item key={caseElem.Id} class="slds-box slds-var-p-horizontal_x-small" size="3">
+              <lightning-card variant="narrow" title={caseElem.Planet__r.Name} icon-name="utility:campaign">
+                <!--Button for sending the API request-->
+                <lightning-button
+                  label="Interplanetary Scan"
+                  title="Interplanetary Scan"
+                  icon-name="utility:broadcast"
+                  slot="actions"
+                  value={caseElem.Planet__r.Code__c}
+                  onclick={handleInterplanetaryScan}
+                ></lightning-button>
+                <div class="slds-var-m-horizontal_medium" style="border-top: 1px solid #b0adab">
+                  <dl class="slds-dl_horizontal">
+                    <!--Planet Code and URL to the Planet Record-->
+                    <dt class="slds-dl_horizontal__label">
+                      <p class="slds-truncate" title="Planet Code"><strong>Planet Code:</strong></p>
+                    </dt>
+                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                      <a class="slds-truncate" href={caseElem.PlanetHref}> {caseElem.Planet__r.Code__c} </a>
+                    </dd>
+
+                    <!--Case Number and URL to the Case Record-->
+                    <dt class="slds-dl_horizontal__label">
+                      <p class="slds-truncate" title="Case Number"><strong>Case Number:</strong></p>
+                    </dt>
+                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                      <a class="slds-truncate" href={caseElem.CaseHref}> {caseElem.CaseNumber} </a>
+                    </dd>
+
+                    <!--Case Status-->
+                    <dt class="slds-dl_horizontal__label">
+                      <p class="slds-truncate" title="Status"><strong>Status:</strong></p>
+                    </dt>
+                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                      <p class="slds-truncate" title={caseElem.Status}>{caseElem.Status}</p>
+                    </dd>
+
+                    <!--Subject-->
+                    <dt class="slds-dl_horizontal__label">
+                      <p class="slds-truncate" title="Subject"><strong>Subject:</strong></p>
+                    </dt>
+                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                      <p title={caseElem.Subject}>{caseElem.Subject}</p>
+                    </dd>
+
+                    <!--Description-->
+                    <dt class="slds-dl_horizontal__label">
+                      <p class="slds-truncate" title="Description"><strong>Description:</strong></p>
+                    </dt>
+                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                      <p title={caseElem.Description}>{caseElem.Description}</p>
+                    </dd>
+
+                    <!--Contact Name and URL to the Contact Record-->
+                    <dt class="slds-dl_horizontal__label">
+                      <p class="slds-truncate" title="Contact"><strong>Contact:</strong></p>
+                    </dt>
+                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                      <a class="slds-truncate" href={caseElem.ContactHref}> {caseElem.Contact.Name} </a>
+                    </dd>
+
+                    <!--Contact Email-->
+                    <dt class="slds-dl_horizontal__label">
+                      <p class="slds-truncate" title="Contact Email"><strong>Contact Email:</strong></p>
+                    </dt>
+                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                      <p class="slds-truncate" title={caseElem.SuppliedEmail}>{caseElem.SuppliedEmail}</p>
+                    </dd>
+
+                    <!--Created Date-->
+                    <dt class="slds-dl_horizontal__label">
+                      <p class="slds-truncate" title="Create Date"><strong>Create Date:</strong></p>
+                    </dt>
+                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                      <p class="slds-truncate" title={caseElem.CreatedDate}>{caseElem.CreatedDate}</p>
+                    </dd>
+                  </dl>
+                </div>
+              </lightning-card>
+            </lightning-layout-item>
+          </template>
+        </lightning-layout>
+      </template>
+    </div>
+  </lightning-card>
+</template>
