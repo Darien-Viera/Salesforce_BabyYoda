@@ -1,7 +1,7 @@
 //Testclass: CaseTriggerTest
 public class CaseTriggerHelper {
-  public static List<Map<String, sObject>> getPlanetsFromCases(List<sObject> newList) {
-    List<Map<String, sObject>> mapContainerList = new List<Map<String, sObject>>();
+  public static List<Map<String, SObject>> getPlanetsFromCases(List<SObject> newList) {
+    List<Map<String, SObject>> mapContainerList = new List<Map<String, SObject>>();
     Map<String, Planet__c> planetMap = new Map<String, Planet__c>();
     Map<String, Case> caseMap = new Map<String, Case>();
     // iterate over the Trigger.new list of Cases and gather the information related to the

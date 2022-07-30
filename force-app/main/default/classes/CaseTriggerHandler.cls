@@ -1,7 +1,7 @@
 //Testclass: CaseTriggerTest
 public class CaseTriggerHandler {
-  public static String runBeforeInsert(List<sObject> newList) {
-    List<Map<String, sObject>> mapContainerList = CaseTriggerHelper.getPlanetsFromCases(newList);
+  public static String runBeforeInsert(List<SObject> newList) {
+    List<Map<String, SObject>> mapContainerList = CaseTriggerHelper.getPlanetsFromCases(newList);
     // the getPlanetsFromCases function must return two maps: <Code, Planet__c> and <Code, Case>
     if (mapContainerList.size() != 2)
       return 'FAIL';
@@ -23,27 +23,27 @@ public class CaseTriggerHandler {
     return 'SUCCESS';
   }
 
-  public static String runBeforeUpdate(Map<Id, sObject> newMap, Map<Id, sObject> oldMap) {
+  public static String runBeforeUpdate(Map<Id, SObject> newMap, Map<Id, SObject> oldMap) {
     return 'NOT IMPLEMENTED';
   }
 
-  public static String runBeforeDelete(Map<Id, sObject> oldMap) {
+  public static String runBeforeDelete(Map<Id, SObject> oldMap) {
     return 'NOT IMPLEMENTED';
   }
 
-  public static String runAfterInsert(Map<Id, sObject> newMap) {
+  public static String runAfterInsert(Map<Id, SObject> newMap) {
     return 'NOT IMPLEMENTED';
   }
 
-  public static String runAfterUpdate(Map<Id, sObject> newMap, Map<Id, sObject> oldMap) {
+  public static String runAfterUpdate(Map<Id, SObject> newMap, Map<Id, SObject> oldMap) {
     return 'NOT IMPLEMENTED';
   }
 
-  public static String runAfterDelete(Map<Id, sObject> oldMap) {
+  public static String runAfterDelete(Map<Id, SObject> oldMap) {
     return 'NOT IMPLEMENTED';
   }
 
-  public static String runAfterUndelete(Map<Id, sObject> newMap) {
+  public static String runAfterUndelete(Map<Id, SObject> newMap) {
     return 'NOT IMPLEMENTED';
   }
 }
