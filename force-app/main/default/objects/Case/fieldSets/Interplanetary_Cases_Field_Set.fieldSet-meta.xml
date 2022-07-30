@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldSet xmlns="http://soap.sforce.com/2006/04/metadata">
+  <availableFields>
+    <field>CaseNumber</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </availableFields>
+  <description>Used on the Interplanetary Cases components. The fields that must be supported by it are: Subject, Status, Planet Code, Successful Scan, among others.</description>
+  <displayedFields>
+    <field>ContactEmail</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </displayedFields>
+  <displayedFields>
+    <field>ContactId</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </displayedFields>
+  <displayedFields>
+    <field>Description</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </displayedFields>
+  <displayedFields>
+    <field>Planet__c</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </displayedFields>
+  <displayedFields>
+    <field>Status</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </displayedFields>
+  <displayedFields>
+    <field>Subject</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </displayedFields>
+  <displayedFields>
+    <field>Successful_Scan__c</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </displayedFields>
+  <fullName>Interplanetary_Cases_Field_Set</fullName>
+  <label>Interplanetary Cases Field Set</label>
+</FieldSet>
