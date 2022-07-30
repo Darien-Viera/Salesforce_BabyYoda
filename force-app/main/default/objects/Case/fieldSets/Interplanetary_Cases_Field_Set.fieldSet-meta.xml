@@ -5,6 +5,16 @@
     <isFieldManaged>false</isFieldManaged>
     <isRequired>false</isRequired>
   </availableFields>
+  <availableFields>
+    <field>Contact.MasterRecordId</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </availableFields>
+  <availableFields>
+    <field>Planet__r.Name</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>false</isRequired>
+  </availableFields>
   <description>Used on the Interplanetary Cases components. The fields that must be supported by it are: Subject, Status, Planet Code, Successful Scan, among others.</description>
   <displayedFields>
     <field>ContactEmail</field>
@@ -24,7 +34,12 @@
   <displayedFields>
     <field>Planet__c</field>
     <isFieldManaged>false</isFieldManaged>
-    <isRequired>false</isRequired>
+    <isRequired>true</isRequired>
+  </displayedFields>
+  <displayedFields>
+    <field>Planet__r.Code__c</field>
+    <isFieldManaged>false</isFieldManaged>
+    <isRequired>true</isRequired>
   </displayedFields>
   <displayedFields>
     <field>Status</field>
