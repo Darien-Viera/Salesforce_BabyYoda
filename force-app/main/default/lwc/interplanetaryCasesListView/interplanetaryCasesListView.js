@@ -385,13 +385,16 @@ export default class InterplanetaryCasesListView extends LightningElement {
         if (flattenFieldName.indexOf('.') !== -1) continue;
         // "beautifying" the field name
         flattenFieldName = flattenFieldName.replaceAll('__c', '').replaceAll('__r', '');
-        let flattenFieldNameWithSpaces = flattenFieldName.replaceAll('_', ' ');
         let fieldIndexes = element.FieldName.split('.');
         caseList.forEach((caseElem) => {
           if (fieldIndexes.length === 2) {
             caseElem[flattenFieldName] = caseElem[fieldIndexes[0]][fieldIndexes[1]];
           }
         });
+        let flattenFieldNameWithSpaces = element.FieldName.replace('.', ' ')
+          .replaceAll('__c', '')
+          .replaceAll('__r', '')
+          .replaceAll('_', ' ');
         this.columnsFS.push({
           label: flattenFieldNameWithSpaces,
           fieldName: flattenFieldName,
