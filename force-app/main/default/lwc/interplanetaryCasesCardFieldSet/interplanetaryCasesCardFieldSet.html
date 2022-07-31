@@ -1,3 +1,31 @@
 <template>
-    
+  <template if:false={caseElem}>
+    <div>
+      <h1><strong>-- Undefined Record --</strong></h1>
+    </div>
+  </template>
+  <template if:true={caseElem}>
+    <div class="slds-var-m-horizontal_medium" style="border-top: 1px solid #b0adab">
+      <dl class="slds-dl_horizontal">
+        <!--Iterate over the pairings and render the urls-->
+        <template for:each={pairingsProcessed} for:item="pairing">
+          <dt key={pairing.id} class="slds-dl_horizontal__label">
+            <p title={pairing.label}><strong>{pairing.label}:</strong></p>
+          </dt>
+          <dd key={pairing.id} class="slds-dl_horizontal__detail slds-tile__meta">
+            <a href={pairing.link}>{pairing.value}</a>
+          </dd>
+        </template>
+        <!--Iterate over the pairings and render normal fields-->
+        <template for:each={singlesProcessed} for:item="single">
+          <dt key={single.id} class="slds-dl_horizontal__label">
+            <p title={single.label}><strong>{single.label}:</strong></p>
+          </dt>
+          <dd key={single.id} class="slds-dl_horizontal__detail slds-tile__meta">
+            <p title={single.value}>{single.value}</p>
+          </dd>
+        </template>
+      </dl>
+    </div>
+  </template>
 </template>

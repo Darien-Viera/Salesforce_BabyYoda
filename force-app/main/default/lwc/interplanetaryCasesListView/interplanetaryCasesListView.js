@@ -88,6 +88,8 @@ export default class InterplanetaryCasesListView extends LightningElement {
   @track casesLoadedFS = false;
   @track caseSelectedFS = null;
   @track preselectedCaseFS = [];
+  @track fieldSetFS = [];
+  @track pairingsFS = [];
   columnsFS = [];
 
   connectedCallback() {
@@ -232,7 +234,9 @@ export default class InterplanetaryCasesListView extends LightningElement {
     this.casesLoadedFS = false;
     this.caseSelectedFS = null;
     this.preselectedCaseFS = [];
+    this.fieldSetFS = [];
     this.columnsFS = [];
+    this.pairingsFS = [];
     getFiveOldestCasesAndFieldSet()
       .then((casesWrapper) => {
         // process the references to related objects and the Id field adding them as url columns
@@ -245,9 +249,12 @@ export default class InterplanetaryCasesListView extends LightningElement {
           clonedListsWithLinks[0],
           clonedListsWithLinks[1]
         );
-        this.casesListFS = clonedListsAllProcessed;
+        // the pairings and columns variables are built during the execution, so no assignation is required
+        // in this section of the code
+        this.casesListFS = clonedListsAllProcessed[1];
+        this.fieldSetFS = clonedListsAllProcessed[0];
         this.casesLoadedFS = this.casesListFS.length > 0;
-        this.caseSelectedFS = clonedListsAllProcessed[0];
+        this.caseSelectedFS = clonedListsAllProcessed[1][0];
         if (this.casesLoadedFS) {
           this.preselectedCaseFS = [this.casesListFS[0].Id];
         }
@@ -317,6 +324,10 @@ export default class InterplanetaryCasesListView extends LightningElement {
           },
           hideDefaultActions: true
         });
+        // the pairings list is going to store the pairings done during the processing in tuples
+        // which will contain the label for the fieldName, link for the field value and value for the
+        // field value
+        this.pairingsFS.push({ label: 'Case Number', link: 'CaseHref', value: 'CaseNumber' });
       } else if (element.FieldType.toLowerCase() === 'reference') {
         // process a reference field, a.k.a a related record
         let fieldPathValues = this.getFieldPathForSearching(element);
@@ -366,6 +377,10 @@ export default class InterplanetaryCasesListView extends LightningElement {
           },
           hideDefaultActions: true
         });
+        // the pairings list is going to store the pairings done during the processing in tuples
+        // which will contain the label for the fieldName, link for the field value and value for the
+        // field value
+        this.pairingsFS.push({ label: fieldPathValues[1], link: hrefName, value: flattenAttribute });
       }
     }
     return [fieldSetMembersCheckmark, caseListCloned];
@@ -401,6 +416,7 @@ export default class InterplanetaryCasesListView extends LightningElement {
           type: 'text',
           hideDefaultActions: true
         });
+        this.pairingsFS.push({ label: flattenFieldNameWithSpaces, value: flattenFieldName });
       } else {
         // if the field is not a relationship we only add a new column to the datatable columns
         // with the column name "beautified"
@@ -411,9 +427,10 @@ export default class InterplanetaryCasesListView extends LightningElement {
           type: 'text',
           hideDefaultActions: true
         });
+        this.pairingsFS.push({ label: flattenFieldName, value: element.FieldName });
       }
     }
-    return caseList;
+    return [fieldSetMembers, caseList];
   }
 
   searchFieldByName(fieldSetMembersCheckmark, fieldName) {
