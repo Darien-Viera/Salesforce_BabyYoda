@@ -298,14 +298,14 @@ export default class InterplanetaryCasesListView extends LightningElement {
       // if the element was processed, continue to the next (return early pattern)
       if (element.Processed) continue;
       if (element.FieldType.toLowerCase() === 'id') {
+        element.Processed = true;
         // process the Id field, which is the Case Id
         // we'll try to pair the Case Id with the Case Number, so we look for that field
         let indexCaseNumber = this.searchFieldByName(fieldSetMembersCheckmark, 'casenumber');
         // if the Case Number is not found, continue to the next (return early pattern)
         if (indexCaseNumber === null) continue;
         let elementCaseNumber = fieldSetMembersCheckmark[indexCaseNumber];
-        // mark both elements as processed
-        element.Processed = true;
+        // mark the paired elements as processed
         elementCaseNumber.Processed = true;
         // add the link to the record Case to each Case in the list
         caseListCloned.forEach((caseElem) => {
@@ -329,6 +329,7 @@ export default class InterplanetaryCasesListView extends LightningElement {
         // field value
         this.pairingsFS.push({ label: 'Case Number', link: 'CaseHref', value: 'CaseNumber' });
       } else if (element.FieldType.toLowerCase() === 'reference') {
+        element.Processed = true;
         // process a reference field, a.k.a a related record
         let fieldPathValues = this.getFieldPathForSearching(element);
         // if the path could not be built, move to the next item in the list
@@ -336,8 +337,7 @@ export default class InterplanetaryCasesListView extends LightningElement {
         let indexFieldPath = this.searchFieldByName(fieldSetMembersCheckmark, fieldPathValues[2]);
         if (indexFieldPath === null) continue;
         let elementPaired = fieldSetMembersCheckmark[indexFieldPath];
-        // mark both elements as processed
-        element.Processed = true;
+        // mark the paired elements as processed
         elementPaired.Processed = true;
         // create the link field for the datatable
         let hrefName = fieldPathValues[1] + 'Href';
