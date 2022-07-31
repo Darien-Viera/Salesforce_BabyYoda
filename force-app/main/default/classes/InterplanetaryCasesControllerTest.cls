@@ -94,6 +94,7 @@ public class InterplanetaryCasesControllerTest {
       fieldSet
     );
     test.stopTest();
+    // verify that the case Id is being inserted always
     System.assertEquals(
       'ID',
       fieldSetWrapperList[0].FieldType,
@@ -104,6 +105,7 @@ public class InterplanetaryCasesControllerTest {
       fieldSetWrapperList[0].FieldName,
       '> The first field set wrapper member name should be Id'
     );
+    // verifying that the field set items match the ones inserted as wrapper objects
     for (Integer i = 1; i < fieldSetWrapperList.size(); i++) {
       System.assertEquals(
         String.valueOf(fieldSet[i - 1].getType()),
