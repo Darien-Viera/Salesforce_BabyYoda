@@ -401,7 +401,7 @@ export default class InterplanetaryCasesListView extends LightningElement {
       } else {
         // if the field is not a relationship we only add a new column to the datatable columns
         // with the column name "beautified"
-        let flattenFieldName = element.FieldName.replaceAll('__c', '').replaceAll('__r', '');
+        let flattenFieldName = element.FieldName.replaceAll('__c', '').replaceAll('__r', '').replaceAll('_', ' ');
         this.columnsFS.push({
           label: flattenFieldName,
           fieldName: element.FieldName,
