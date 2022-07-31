@@ -1,3 +1,4 @@
+<!-- sldsValidatorIgnore -->
 <template>
   <lightning-card title="Interplanetary Cases" icon-name="utility:cases" class="slds-var-m-horizontal_xx-large">
     <!--Button for testing purposes, it restores the interplanetary cases to New status and sets the Scan to false-->
@@ -16,43 +17,138 @@
       icon-name="utility:refresh"
       onclick={handleRefreshRecords}
     ></lightning-button>
-    <div
-      class="slds-var-m-horizontal_x-large slds-box"
-      style="display: flex; align-items: center; justify-content: center"
-    >
-      <!--If no cases were found, set the label to No Cases Found where the items should be-->
-      <template if:false={casesLoaded}>
-        <div>
-          <h1><strong>-- No cases found --</strong></h1>
-        </div>
-      </template>
-      <!--If cases were found, set the normal visualization for the table-->
-      <template if:true={casesLoaded}>
-        <lightning-layout multiple-rows="true">
-          <!--Spinner for the loading state of the page-->
-          <template if:true={loading}>
-            <lightning-spinner alternative-text="Loading..." size="large" variant="brand"></lightning-spinner>
-          </template>
+    <!--Spinner for the loading state of the page-->
+    <template if:true={loading}>
+      <lightning-spinner alternative-text="Loading..." size="large" variant="brand"></lightning-spinner>
+    </template>
 
-          <!--Iterate over the Case List returned from the Server Controller-->
-          <template for:each={casesList} for:item="caseElem">
-            <lightning-layout-item key={caseElem.Id} class="slds-box slds-var-p-horizontal_x-small" size="3">
-              <lightning-card variant="narrow" title={caseElem.Planet__r.Name} icon-name="utility:campaign">
+    <!--Section for the mosaic view-->
+    <lightning-card variant="narrow" title="Mosaic View" icon-name="utility:ad_set">
+      <div
+        class="slds-var-m-horizontal_x-large slds-box"
+        style="display: flex; align-items: center; justify-content: center"
+      >
+        <!--If no cases were found, set the label to No Cases Found where the items should be-->
+        <template if:false={casesLoaded}>
+          <div>
+            <h1><strong>-- No cases found --</strong></h1>
+          </div>
+        </template>
+        <!--If cases were found, set the normal visualization for the table-->
+        <template if:true={casesLoaded}>
+          <lightning-layout multiple-rows="true">
+            <!--Iterate over the Case List returned from the Server Controller-->
+            <template for:each={casesList} for:item="caseElem">
+              <lightning-layout-item key={caseElem.Id} class="slds-box slds-var-p-horizontal_x-small" size="3">
+                <lightning-card variant="narrow" title={caseElem.Planet__r.Name} icon-name="utility:campaign">
+                  <!--Button for sending the API request-->
+                  <lightning-button
+                    label="Interplanetary Scan"
+                    title="Interplanetary Scan"
+                    icon-name="utility:broadcast"
+                    slot="actions"
+                    value={caseElem.Planet__r.Code__c}
+                    onclick={handleInterplanetaryScan}
+                  ></lightning-button>
+                  <c-interplanetary-cases-card case-elem={caseElem}></c-interplanetary-cases-card>
+                </lightning-card>
+              </lightning-layout-item>
+            </template>
+          </lightning-layout>
+        </template>
+      </div>
+    </lightning-card>
+
+    <!--Section for the list view-->
+    <lightning-card title="List View" icon-name="utility:table">
+      <div
+        class="slds-var-m-horizontal_x-large slds-box"
+        style="display: flex; align-items: center; justify-content: center"
+      >
+        <!--If no cases were found, set the label to No Cases Found where the items should be-->
+        <template if:false={casesLoaded}>
+          <div>
+            <h1><strong>-- No cases found --</strong></h1>
+          </div>
+        </template>
+        <!--If cases were found, set the normal visualization for the table-->
+        <template if:true={casesLoaded}>
+          <lightning-layout multiple-rows="true">
+            <lightning-layout-item class="slds-box slds-var-p-horizontal_x-small" size="9">
+              <lightning-datatable
+                key-field="Id"
+                data={casesList}
+                columns={columns}
+                column-widths-mode="fixed"
+                onrowselection={handleRowSelection}
+                max-row-selection="1"
+                selected-rows={preselectedCase}
+              >
+              </lightning-datatable
+            ></lightning-layout-item>
+            <lightning-layout-item class="slds-box slds-var-p-horizontal_x-small" size="3">
+              <lightning-card variant="narrow" title={caseSelected.Planet__r.Name} icon-name="utility:campaign">
                 <!--Button for sending the API request-->
                 <lightning-button
                   label="Interplanetary Scan"
                   title="Interplanetary Scan"
                   icon-name="utility:broadcast"
                   slot="actions"
-                  value={caseElem.Planet__r.Code__c}
+                  value={caseSelected.Planet__r.Code__c}
                   onclick={handleInterplanetaryScan}
                 ></lightning-button>
-                <c-interplanetary-cases-card case-elem={caseElem}></c-interplanetary-cases-card>
+                <c-interplanetary-cases-card case-elem={caseSelected}></c-interplanetary-cases-card>
               </lightning-card>
             </lightning-layout-item>
-          </template>
-        </lightning-layout>
-      </template>
-    </div>
+          </lightning-layout>
+        </template>
+      </div>
+    </lightning-card>
+
+    <!--Section for the list view with Field Set-->
+    <lightning-card title="List View with Field Set" icon-name="utility:table_settings">
+      <div
+        class="slds-var-m-horizontal_x-large slds-box"
+        style="display: flex; align-items: center; justify-content: center"
+      >
+        <!--If no cases were found, set the label to No Cases Found where the items should be-->
+        <template if:false={casesLoadedFS}>
+          <div>
+            <h1><strong>-- No cases found --</strong></h1>
+          </div>
+        </template>
+        <!--If cases were found, set the normal visualization for the table-->
+        <template if:true={casesLoadedFS}>
+          <lightning-layout multiple-rows="true">
+            <lightning-layout-item class="slds-box slds-var-p-horizontal_x-small" size="9">
+              <lightning-datatable
+                key-field="Id"
+                data={casesListFS}
+                columns={columnsFS}
+                column-widths-mode="fixed"
+                onrowselection={handleRowSelectionFS}
+                max-row-selection="1"
+                selected-rows={preselectedCaseFS}
+              >
+              </lightning-datatable
+            ></lightning-layout-item>
+            <lightning-layout-item class="slds-box slds-var-p-horizontal_x-small" size="3">
+              <lightning-card variant="narrow" title={caseSelectedFS.Planet__r.Name} icon-name="utility:campaign">
+                <!--Button for sending the API request-->
+                <lightning-button
+                  label="Interplanetary Scan"
+                  title="Interplanetary Scan"
+                  icon-name="utility:broadcast"
+                  slot="actions"
+                  value={caseSelectedFS.Planet__r.Code__c}
+                  onclick={handleInterplanetaryScan}
+                ></lightning-button>
+                <c-interplanetary-cases-card case-elem={caseSelectedFS}></c-interplanetary-cases-card>
+              </lightning-card>
+            </lightning-layout-item>
+          </lightning-layout>
+        </template>
+      </div>
+    </lightning-card>
   </lightning-card>
 </template>
