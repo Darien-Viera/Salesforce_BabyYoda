@@ -123,7 +123,11 @@ export default class InterplanetaryCasesListView extends LightningElement {
         // standard error handling
         let stringy = JSON.stringify(error);
         console.log(stringy);
-        this.showToast('error', 'ERROR', 'The interplanetary scan failed! Error details -> ' + stringy);
+        let errorMsg =
+          stringy === ''
+            ? 'The interplanetary scan failed!'
+            : 'The interplanetary scan failed! Error details -> ' + stringy;
+        this.showToast('error', 'ERROR', errorMsg);
       })
       .finally(() => {
         // the spinner is hidden in every execution path in the end
@@ -146,7 +150,11 @@ export default class InterplanetaryCasesListView extends LightningElement {
         // standard error handling
         let stringy = JSON.stringify(error);
         console.log(stringy);
-        this.showToast('error', 'ERROR', 'The interplanetary cases failed to be restored! Error details -> ' + stringy);
+        let errorMsg =
+          stringy === ''
+            ? 'The interplanetary cases failed to be restored!'
+            : 'The interplanetary cases failed to be restored! Error details -> ' + stringy;
+        this.showToast('error', 'ERROR', errorMsg);
       })
       .finally(() => {
         // the spinner is hidden in every execution path in the end
@@ -201,7 +209,11 @@ export default class InterplanetaryCasesListView extends LightningElement {
         this.casesLoaded = this.casesList.length > 0;
         let stringy = JSON.stringify(error);
         console.log(stringy);
-        this.showToast('error', 'ERROR', 'The interplanetary cases failed to be loaded! Error details -> ' + stringy);
+        let errorMsg =
+          stringy === ''
+            ? 'The interplanetary cases failed to be loaded!'
+            : 'The interplanetary cases failed to be loaded! Error details -> ' + stringy;
+        this.showToast('error', 'ERROR', errorMsg);
       })
       .finally(() => {
         // the spinner is hidden in every execution path in the end
@@ -271,7 +283,11 @@ export default class InterplanetaryCasesListView extends LightningElement {
         this.casesLoadedFS = this.casesListFS.length > 0;
         let stringy = JSON.stringify(error);
         console.log(stringy);
-        this.showToast('error', 'ERROR', 'The interplanetary cases failed to be loaded! Error details -> ' + stringy);
+        let errorMsg =
+          stringy === ''
+            ? 'The interplanetary cases failed to be loaded!'
+            : 'The interplanetary cases failed to be loaded! Error details -> ' + stringy;
+        this.showToast('error', 'ERROR', errorMsg);
       })
       .finally(() => {
         // the spinner is hidden in every execution path in the end
